@@ -413,14 +413,14 @@ class NMConnection:
         found_dns_search = []
 
         # Deal with Layer 3 configuration
-        if if_type == "bond" and not iface["subnets"]:
+        if if_type in ("bond", "ethernet") and not iface["subnets"]:
             # If there is no L3 subnet config for a given connection,
             # ensure it is disabled. Without this, the interface
             # defaults to 'auto' which implies DHCP. This is problematic
-            # for certain configurations such as bonds where the root
+            # for certain configurations such as VLANs where the parent
             # device itself may not have a subnet config and should be
-            # disabled while a separate VLAN interface on the bond holds
-            # the subnet information.
+            # disabled while a separate VLAN interface holds the subnet
+            # information.
             for family in ["ipv4", "ipv6"]:
                 self._set_ip_method(family, None)
 
